@@ -1,118 +1,78 @@
-# 📚 Système de Gestion de Bibliothèque Personnelle
+# Bibliothèque Personnelle 
 
-**Projet Final Python — TC SPRING M1 (Fr) 2025-2026**
+Un petit projet Python qu'on a développé dans le cadre de notre cours de programmation en M1. L'idée de base c'est simple : gérer une bibliothèque personnelle, avec des livres, des utilisateurs, et la possibilité d'emprunter ou de retourner des livres. 
 
----
-
-## 📋 Description
-
-Application en ligne de commande permettant de gérer une bibliothèque personnelle :
-- Gérer une collection de livres (ajout, suppression, recherche)
-- Gérer des utilisateurs
-- Emprunter et retourner des livres
-- Consulter des statistiques
-- Sauvegarder et charger les données (JSON)
+le travail de : 
+- ALI TRAORE
+- SEPHANE HOUE
+- NANAN KOUAKOU
 
 ---
 
-## 🚀 Lancement
+## Comment lancer le projet
+
+Pas besoin d'installer quoi que ce soit, Python suffit. Il suffit de lancer :
 
 ```bash
 python bibliotheque.py
 ```
 
-Aucune dépendance externe requise (bibliothèques standard Python uniquement : `json`, `os`, `datetime`).
+Et le menu s'affiche directement dans le terminal.
 
 ---
 
-## 🏗️ Structure du code
+## Ce que le programme permet de faire
 
-| Fichier | Description |
-|--------|-------------|
-| `bibliotheque.py` | Code source principal (unique fichier) |
+- Ajouter ou supprimer des livres
+- Rechercher un livre par titre ou par auteur
+- Créer des utilisateurs
+- Emprunter et retourner des livres
+- Voir les statistiques de la bibliothèque (livres les plus empruntés, auteurs, etc.)
+- Sauvegarder automatiquement les données en JSON et en CSV
+
+---
+
+## Les fichiers du projet
+
+| Fichier | Rôle |
+|--------|------|
+| `bibliotheque.py` | Le code principal |
+| `livres.csv` | Données de départ pour les livres |
+| `utilisateurs.csv` | Données de départ pour les utilisateurs |
 | `bibliotheque_data.json` | Fichier de sauvegarde (généré automatiquement) |
-| `README.md` | Ce fichier |
 
 ---
 
-## 🧱 Architecture
+## Organisation du code
 
-### Classes (POO)
+On a essayé de bien structurer le projet en suivant ce qu'on a vu en cours :
 
-**`Livre`**
-- Attributs : `titre`, `auteur`, `annee`, `isbn`, `disponible`, `nb_emprunts`
-- Méthodes : `__init__`, `__str__`, `emprunter()`, `retourner()`, `to_dict()`, `from_dict()`
-
-**`Utilisateur`**
-- Attributs : `nom`, `id_utilisateur`, `livres_empruntes` (liste d'ISBN)
-- Méthodes : `__init__`, `__str__`, `emprunter_livre()`, `retourner_livre()`, `to_dict()`, `from_dict()`
-
-### Fonctions principales
-
-| Fonction | Description |
-|---------|-------------|
-| `ajouter_livre()` | Ajoute un livre (vérifie l'unicité de l'ISBN) |
-| `supprimer_livre()` | Supprime un livre par ISBN (si non emprunté) |
-| `rechercher_par_titre()` | Recherche partielle par titre |
-| `rechercher_par_auteur()` | Recherche partielle par auteur |
-| `afficher_tous_les_livres()` | Affiche tous les livres |
-| `afficher_livres_disponibles()` | Filtre les livres disponibles |
-| `afficher_livres_empruntes()` | Filtre les livres empruntés |
-| `statistiques()` | Statistiques globales + top emprunteurs |
-| `sauvegarder_donnees()` | Sauvegarde JSON |
-| `charger_donnees()` | Chargement JSON |
+- **Classe `Livre`** : représente un livre avec son titre, auteur, année, ISBN et son statut (disponible ou emprunté)
+- **Classe `Utilisateur`** : représente un utilisateur avec la liste des livres qu'il a empruntés
+- **Les fonctions** : gèrent toute la logique de la bibliothèque (ajout, recherche, affichage, stats...)
+- **Le menu** : l'interface en ligne de commande pour naviguer entre les options
 
 ---
 
-## 📦 Structures de données utilisées
+## Sauvegarde des données
 
-| Structure | Utilisation |
-|-----------|-------------|
-| **Dictionnaire** | `bibliotheque` (clé = ISBN), `utilisateurs` (clé = ID) |
-| **Liste** | `livres_empruntes` de chaque utilisateur |
-| **Set** | Calcul des auteurs uniques dans les statistiques |
-| **Tuple** | Années de publication triées dans les statistiques |
+À chaque fois qu'on quitte le programme, les données sont sauvegardées dans deux formats :
+- un fichier **JSON** (`bibliotheque_data.json`)
+- deux fichiers **CSV** (`livres.csv` et `utilisateurs.csv`)
 
----
-
-## 🎮 Menu principal
-
-```
-=== BIBLIOTHÈQUE PERSONNELLE ===
-1.  Ajouter un livre
-2.  Supprimer un livre
-3.  Rechercher un livre
-4.  Afficher tous les livres
-5.  Afficher les livres disponibles
-6.  Afficher les livres empruntés
-7.  Ajouter un utilisateur
-8.  Afficher tous les utilisateurs
-9.  Emprunter un livre
-10. Retourner un livre
-11. Statistiques
-12. Sauvegarder & Quitter
-```
+Au prochain lancement, le programme recharge tout automatiquement.
 
 ---
 
-## ✅ Gestion des erreurs
+## Ce qu'on a utilisé comme notions Python
 
-- Validation des saisies (entiers, champs vides)
-- Vérification de l'unicité de l'ISBN à l'ajout
-- Impossible de supprimer un livre actuellement emprunté
-- Vérification de l'existence d'un utilisateur avant emprunt
-- Gestion des erreurs de lecture JSON
+- Les classes et la POO
+- Les dictionnaires, listes, sets et tuples
+- Les fonctions
+- Les boucles et conditions
+- La gestion des fichiers (JSON et CSV)
+- La gestion des erreurs avec try/except
 
 ---
 
-## 💡 Notions Python couvertes
-
-- Variables et types de données
-- Entrées/Sorties (`input`, `print`)
-- Conditions (`if/elif/else`)
-- Boucles (`for`, `while`)
-- Listes, dictionnaires, sets, tuples
-- Fonctions avec paramètres et valeurs de retour
-- Programmation Orientée Objet (classes, méthodes, `__str__`, `__init__`)
-- Fichiers JSON (`json.load`, `json.dump`)
-- Gestion d'exceptions (`try/except`)
+Projet réalisé dans le cadre du cours Python — TC SPRING M1 (Fr) 2025-2026
