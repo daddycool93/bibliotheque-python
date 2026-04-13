@@ -1,17 +1,12 @@
-# =============================================================================
 # SYSTÈME DE GESTION DE BIBLIOTHÈQUE PERSONNELLE
 # Projet Final Python - TC SPRING M1 (Fr) 2025-2026
-# =============================================================================
-
 import json
 import os
 import csv
 from datetime import date
 
 
-# =============================================================================
-# PARTIE 1 : CLASSE LIVRE
-# =============================================================================
+# CLASSE LIVRE
 
 class Livre:
     """Représente un livre dans la bibliothèque."""
@@ -27,7 +22,7 @@ class Livre:
 
     def __str__(self) -> str:
         """Affiche les informations du livre."""
-        statut = "✅ Disponible" if self.disponible else "❌ Emprunté"
+        statut = "Disponible" if self.disponible else "Emprunté"
         return (f"[ISBN: {self.isbn}] \"{self.titre}\" - {self.auteur} "
                 f"({self.annee}) | {statut}")
 
@@ -66,9 +61,7 @@ class Livre:
         return livre
 
 
-# =============================================================================
 # PARTIE 2 : CLASSE UTILISATEUR
-# =============================================================================
 
 class Utilisateur:
     """Représente un utilisateur de la bibliothèque."""
@@ -117,31 +110,29 @@ class Utilisateur:
         return u
 
 
-# =============================================================================
 # PARTIE 3 : FONCTIONS DE GESTION DE LA BIBLIOTHÈQUE
-# =============================================================================
 
 def ajouter_livre(bibliotheque: dict, livre: Livre) -> bool:
     """Ajoute un livre à la bibliothèque (dict indexé par ISBN)."""
     if livre.isbn in bibliotheque:
-        print(f"  ⚠️  Un livre avec l'ISBN '{livre.isbn}' existe déjà.")
+        print(f" Un livre avec l'ISBN '{livre.isbn}' existe déjà.")
         return False
     bibliotheque[livre.isbn] = livre
-    print(f"  ✅ Livre \"{livre.titre}\" ajouté avec succès.")
+    print(f"  Livre \"{livre.titre}\" ajouté avec succès.")
     return True
 
 
 def supprimer_livre(bibliotheque: dict, isbn: str) -> bool:
     """Supprime un livre par son ISBN."""
     if isbn not in bibliotheque:
-        print(f"  ⚠️  Aucun livre trouvé avec l'ISBN '{isbn}'.")
+        print(f"  Aucun livre trouvé avec l'ISBN '{isbn}'.")
         return False
     if not bibliotheque[isbn].disponible:
-        print(f"  ⚠️  Ce livre est actuellement emprunté, impossible de le supprimer.")
+        print(f" Ce livre est actuellement emprunté, impossible de le supprimer.")
         return False
     titre = bibliotheque[isbn].titre
     del bibliotheque[isbn]
-    print(f"  ✅ Livre \"{titre}\" supprimé avec succès.")
+    print(f" Livre \"{titre}\" supprimé avec succès.")
     return True
 
 
@@ -162,9 +153,9 @@ def rechercher_par_auteur(bibliotheque: dict, auteur: str) -> list:
 def afficher_tous_les_livres(bibliotheque: dict) -> None:
     """Affiche tous les livres de la bibliothèque."""
     if not bibliotheque:
-        print("  📭 La bibliothèque est vide.")
+        print("La bibliothèque est vide.")
         return
-    print(f"\n  📚 Total : {len(bibliotheque)} livre(s)\n")
+    print(f"\n Total : {len(bibliotheque)} livre(s)\n")
     for livre in bibliotheque.values():
         print(f"    {livre}")
 
@@ -173,9 +164,9 @@ def afficher_livres_disponibles(bibliotheque: dict) -> None:
     """Affiche uniquement les livres disponibles."""
     disponibles = [l for l in bibliotheque.values() if l.disponible]
     if not disponibles:
-        print("  📭 Aucun livre disponible.")
+        print(" Aucun livre disponible.")
         return
-    print(f"\n  ✅ Livres disponibles : {len(disponibles)}\n")
+    print(f"\n  Livres disponibles : {len(disponibles)}\n")
     for livre in disponibles:
         print(f"    {livre}")
 
@@ -184,9 +175,9 @@ def afficher_livres_empruntes(bibliotheque: dict) -> None:
     """Affiche uniquement les livres empruntés."""
     empruntes = [l for l in bibliotheque.values() if not l.disponible]
     if not empruntes:
-        print("  📭 Aucun livre emprunté actuellement.")
+        print(" Aucun livre emprunté actuellement.")
         return
-    print(f"\n  ❌ Livres empruntés : {len(empruntes)}\n")
+    print(f"\n  Livres empruntés : {len(empruntes)}\n")
     for livre in empruntes:
         print(f"    {livre}")
 
@@ -212,22 +203,22 @@ def statistiques(bibliotheque: dict, utilisateurs: dict) -> None:
     top_livres = sorted(bibliotheque.values(), key=lambda l: l.nb_emprunts, reverse=True)[:3]
 
     print("\n" + "=" * 50)
-    print("         📊 STATISTIQUES DE LA BIBLIOTHÈQUE")
+    print(" STATISTIQUES DE LA BIBLIOTHÈQUE")
     print("=" * 50)
-    print(f"  📚 Total livres         : {total_livres}")
-    print(f"  ✅ Livres disponibles   : {disponibles}")
-    print(f"  ❌ Livres empruntés     : {empruntes}")
-    print(f"  👥 Utilisateurs inscrits : {total_utilisateurs}")
-    print(f"  ✍️  Auteurs différents   : {len(auteurs)}")
-    print(f"  📅 Années : de {annee_min} à {annee_max}")
+    print(f" Total livres         : {total_livres}")
+    print(f" Livres disponibles   : {disponibles}")
+    print(f" Livres empruntés     : {empruntes}")
+    print(f" Utilisateurs inscrits : {total_utilisateurs}")
+    print(f" Auteurs différents   : {len(auteurs)}")
+    print(f" Années : de {annee_min} à {annee_max}")
 
     if top_livres:
-        print("\n  🏆 Top livres les plus empruntés :")
+        print("\n Top livres les plus empruntés :")
         for i, livre in enumerate(top_livres, 1):
             print(f"    {i}. \"{livre.titre}\" ({livre.nb_emprunts} emprunt(s))")
 
     if utilisateurs:
-        print("\n  👤 Utilisateurs les plus actifs :")
+        print("\n Utilisateurs les plus actifs :")
         top_users = sorted(utilisateurs.values(),
                            key=lambda u: len(u.livres_empruntes), reverse=True)[:3]
         for u in top_users:
