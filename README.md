@@ -63,4 +63,4 @@ Au prochain lancement, le programme recharge tout automatiquement.
 Projet réalisé dans le cadre du cours Python — TC SPRING M1 (Fr) 2025-2026
 
 v1 :  depot initial
-v2 : Mise à jour du fichier principal
+v2 : Mise à jour du fichier principal 
