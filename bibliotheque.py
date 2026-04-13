@@ -226,9 +226,7 @@ def statistiques(bibliotheque: dict, utilisateurs: dict) -> None:
     print("=" * 50)
 
 
-# =============================================================================
 # PERSISTANCE DES DONNÉES (JSON + CSV)
-# =============================================================================
 
 FICHIER_JSON             = "bibliotheque_data.json"
 FICHIER_LIVRES_CSV       = "livres.csv"
@@ -247,7 +245,7 @@ def sauvegarder_donnees(bibliotheque: dict, utilisateurs: dict) -> None:
     }
     with open(FICHIER_JSON, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-    print(f"  💾 JSON  → '{FICHIER_JSON}'")
+    print(f"  JSON  → '{FICHIER_JSON}'")
     # --- CSV ---
     sauvegarder_csv_livres(bibliotheque)
     sauvegarder_csv_utilisateurs(utilisateurs)
@@ -275,10 +273,10 @@ def charger_depuis_json() -> tuple:
         for ud in data.get("utilisateurs", []):
             u = Utilisateur.from_dict(ud)
             utilisateurs[u.id_utilisateur] = u
-        print(f"  📂 JSON chargé ({len(bibliotheque)} livre(s), "
+        print(f" JSON chargé ({len(bibliotheque)} livre(s), "
               f"{len(utilisateurs)} utilisateur(s)).")
     except (json.JSONDecodeError, KeyError) as e:
-        print(f"  ⚠️  Erreur JSON : {e}")
+        print(f" Erreur JSON : {e}")
     return bibliotheque, utilisateurs
 
 
@@ -299,7 +297,7 @@ def sauvegarder_csv_livres(bibliotheque: dict) -> None:
                 "disponible":  livre.disponible,
                 "nb_emprunts": livre.nb_emprunts,
             })
-    print(f"  💾 CSV   → '{FICHIER_LIVRES_CSV}'")
+    print(f"  CSV   → '{FICHIER_LIVRES_CSV}'")
 
 
 def sauvegarder_csv_utilisateurs(utilisateurs: dict) -> None:
@@ -315,7 +313,7 @@ def sauvegarder_csv_utilisateurs(utilisateurs: dict) -> None:
                 "id_utilisateur": u.id_utilisateur,
                 "livres_empruntes": "|".join(u.livres_empruntes),
             })
-    print(f"  💾 CSV   → '{FICHIER_UTILISATEURS_CSV}'")
+    print(f" CSV   → '{FICHIER_UTILISATEURS_CSV}'")
 
 
 def charger_depuis_csv() -> tuple:
@@ -338,9 +336,9 @@ def charger_depuis_csv() -> tuple:
                     livre.disponible  = row["disponible"].strip() == "True"
                     livre.nb_emprunts = int(row.get("nb_emprunts", 0))
                     bibliotheque[livre.isbn] = livre
-            print(f"  📂 CSV livres chargé ({len(bibliotheque)} livre(s)).")
+            print(f"  CSV livres chargé ({len(bibliotheque)} livre(s)).")
         except Exception as e:
-            print(f"  ⚠️  Erreur CSV livres : {e}")
+            print(f"  Erreur CSV livres : {e}")
 
     # Utilisateurs
     if os.path.exists(FICHIER_UTILISATEURS_CSV):
@@ -353,22 +351,20 @@ def charger_depuis_csv() -> tuple:
                     empruntes = row.get("livres_empruntes", "").strip()
                     u.livres_empruntes = empruntes.split("|") if empruntes else []
                     utilisateurs[uid] = u
-            print(f"  📂 CSV utilisateurs chargé ({len(utilisateurs)} utilisateur(s)).")
+            print(f"  CSV utilisateurs chargé ({len(utilisateurs)} utilisateur(s)).")
         except Exception as e:
-            print(f"  ⚠️  Erreur CSV utilisateurs : {e}")
+            print(f"  Erreur CSV utilisateurs : {e}")
 
     return bibliotheque, utilisateurs
 
 
-# =============================================================================
 # UTILITAIRES D'INTERFACE
-# =============================================================================
 
 def afficher_menu() -> None:
     """Affiche le menu principal."""
-    print("\n" + "=" * 40)
-    print("      === BIBLIOTHÈQUE PERSONNELLE ===")
-    print("=" * 40)
+    print("_" * 20)
+    print(" BIBLIOX ")
+    print("-" * 20)
     print("  1.  Ajouter un livre")
     print("  2.  Supprimer un livre")
     print("  3.  Rechercher un livre")
@@ -381,7 +377,7 @@ def afficher_menu() -> None:
     print("  10. Retourner un livre")
     print("  11. Statistiques")
     print("  12. Sauvegarder & Quitter")
-    print("=" * 40)
+    print("_" * 30)
 
 
 def saisir_entier(message: str) -> int:
@@ -390,7 +386,7 @@ def saisir_entier(message: str) -> int:
         try:
             return int(input(message))
         except ValueError:
-            print("  ⚠️  Veuillez entrer un nombre entier valide.")
+            print(" Veuillez entrer un nombre entier valide.")
 
 
 def saisir_texte(message: str, min_len: int = 1) -> str:
@@ -399,22 +395,20 @@ def saisir_texte(message: str, min_len: int = 1) -> str:
         valeur = input(message).strip()
         if len(valeur) >= min_len:
             return valeur
-        print(f"  ⚠️  Ce champ ne peut pas être vide.")
+        print(f" Ce champ ne peut pas être vide.")
 
 
 def afficher_resultats(resultats: list, label: str) -> None:
     """Affiche une liste de résultats de recherche."""
     if not resultats:
-        print(f"  📭 Aucun livre trouvé pour '{label}'.")
+        print(f" Aucun livre trouvé pour '{label}'.")
     else:
-        print(f"\n  🔍 {len(resultats)} résultat(s) pour '{label}' :\n")
+        print(f"\n  {len(resultats)} résultat(s) pour '{label}' :\n")
         for livre in resultats:
             print(f"    {livre}")
 
 
-# =============================================================================
 # PARTIE 4 : MENU INTERACTIF PRINCIPAL
-# =============================================================================
 
 def menu_ajouter_livre(bibliotheque: dict) -> None:
     print("\n--- Ajouter un livre ---")
@@ -429,7 +423,7 @@ def menu_ajouter_livre(bibliotheque: dict) -> None:
 def menu_supprimer_livre(bibliotheque: dict) -> None:
     print("\n--- Supprimer un livre ---")
     if not bibliotheque:
-        print("  📭 La bibliothèque est vide.")
+        print(" La bibliothèque est vide.")
         return
     isbn = saisir_texte("  ISBN du livre à supprimer : ")
     supprimer_livre(bibliotheque, isbn)
@@ -449,7 +443,7 @@ def menu_rechercher_livre(bibliotheque: dict) -> None:
         resultats = rechercher_par_auteur(bibliotheque, auteur)
         afficher_resultats(resultats, auteur)
     else:
-        print("  ⚠️  Choix invalide.")
+        print(" Choix invalide.")
 
 
 def menu_ajouter_utilisateur(utilisateurs: dict) -> None:
@@ -459,13 +453,13 @@ def menu_ajouter_utilisateur(utilisateurs: dict) -> None:
     new_id = max(utilisateurs.keys(), default=0) + 1
     u = Utilisateur(nom, new_id)
     utilisateurs[new_id] = u
-    print(f"  ✅ Utilisateur '{nom}' ajouté avec l'ID {new_id}.")
+    print(f" Utilisateur '{nom}' ajouté avec l'ID {new_id}.")
 
 
 def menu_afficher_utilisateurs(utilisateurs: dict) -> None:
     print("\n--- Liste des utilisateurs ---")
     if not utilisateurs:
-        print("  📭 Aucun utilisateur enregistré.")
+        print(" Aucun utilisateur enregistré.")
         return
     for u in utilisateurs.values():
         print(f"    {u}")
@@ -474,36 +468,36 @@ def menu_afficher_utilisateurs(utilisateurs: dict) -> None:
 def menu_emprunter_livre(bibliotheque: dict, utilisateurs: dict) -> None:
     print("\n--- Emprunter un livre ---")
     if not utilisateurs:
-        print("  ⚠️  Aucun utilisateur enregistré. Ajoutez d'abord un utilisateur.")
+        print(" Aucun utilisateur enregistré. Ajoutez d'abord un utilisateur.")
         return
     id_u = saisir_entier("  ID de l'utilisateur : ")
     if id_u not in utilisateurs:
-        print(f"  ⚠️  Aucun utilisateur avec l'ID {id_u}.")
+        print(f"Aucun utilisateur avec l'ID {id_u}.")
         return
     isbn = saisir_texte("  ISBN du livre à emprunter : ")
     if isbn not in bibliotheque:
-        print(f"  ⚠️  Livre avec l'ISBN '{isbn}' introuvable.")
+        print(f"Livre avec l'ISBN '{isbn}' introuvable.")
         return
     utilisateur = utilisateurs[id_u]
     livre = bibliotheque[isbn]
     if not livre.disponible:
-        print(f"  ⚠️  Le livre \"{livre.titre}\" est déjà emprunté.")
+        print(f"Le livre \"{livre.titre}\" est déjà emprunté.")
         return
     if utilisateur.emprunter_livre(livre):
-        print(f"  ✅ {utilisateur.nom} a emprunté \"{livre.titre}\".")
+        print(f" {utilisateur.nom} a emprunté \"{livre.titre}\".")
     else:
-        print("  ⚠️  Emprunt impossible (déjà emprunté par cet utilisateur ?).")
+        print("  Emprunt impossible (déjà emprunté par cet utilisateur ?).")
 
 
 def menu_retourner_livre(bibliotheque: dict, utilisateurs: dict) -> None:
     print("\n--- Retourner un livre ---")
     id_u = saisir_entier("  ID de l'utilisateur : ")
     if id_u not in utilisateurs:
-        print(f"  ⚠️  Aucun utilisateur avec l'ID {id_u}.")
+        print(f" Aucun utilisateur avec l'ID {id_u}.")
         return
     utilisateur = utilisateurs[id_u]
     if not utilisateur.livres_empruntes:
-        print(f"  ℹ️  {utilisateur.nom} n'a aucun livre emprunté.")
+        print(f" {utilisateur.nom} n'a aucun livre emprunté.")
         return
     print(f"  Livres empruntés par {utilisateur.nom} :")
     for isbn in utilisateur.livres_empruntes:
@@ -511,28 +505,26 @@ def menu_retourner_livre(bibliotheque: dict, utilisateurs: dict) -> None:
             print(f"    - {bibliotheque[isbn]}")
     isbn = saisir_texte("  ISBN du livre à retourner : ")
     if isbn not in bibliotheque:
-        print(f"  ⚠️  ISBN '{isbn}' introuvable.")
+        print(f" ISBN '{isbn}' introuvable.")
         return
     livre = bibliotheque[isbn]
     if utilisateur.retourner_livre(livre):
-        print(f"  ✅ {utilisateur.nom} a retourné \"{livre.titre}\".")
+        print(f"  {utilisateur.nom} a retourné \"{livre.titre}\".")
     else:
-        print("  ⚠️  Ce livre ne figure pas dans les emprunts de cet utilisateur.")
+        print("  Ce livre ne figure pas dans les emprunts de cet utilisateur.")
 
 
-# =============================================================================
 # POINT D'ENTRÉE PRINCIPAL
-# =============================================================================
 
 def main():
-    print("\n🚀 Bienvenue dans le Système de Gestion de Bibliothèque Personnelle !")
+    print("\n BIBLIOX - Bienvenue dans le Système de Gestion de Bibliothèque Personnelle !")
 
     # Chargement des données existantes
     bibliotheque, utilisateurs = charger_donnees()
 
     # Données de démonstration si la bibliothèque est vide
     if not bibliotheque:
-        print("  ℹ️  Chargement de données de démonstration...")
+        print(" Chargement de données de démonstration...")
         livres_demo = [
             Livre("Le Petit Prince", "Antoine de Saint-Exupéry", 1943, "978-2-07-040850-4"),
             Livre("1984", "George Orwell", 1949, "978-2-07-036822-8"),
@@ -572,10 +564,10 @@ def main():
             statistiques(bibliotheque, utilisateurs)
         elif choix == "12":
             sauvegarder_donnees(bibliotheque, utilisateurs)
-            print("\n👋 Au revoir !\n")
+            print("\n Au revoir !\n")
             break
         else:
-            print("  ⚠️  Choix invalide. Veuillez entrer un nombre entre 1 et 12.")
+            print("  Choix invalide. Veuillez entrer un nombre entre 1 et 12.")
 
 
 if __name__ == "__main__":
